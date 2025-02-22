@@ -1,0 +1,50 @@
+# Dependency directories
+node_modules/
+
+# Build files
+/dist/
+/build/
+/out/
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Logs
+*.log
+logs/
+
+# IDE/Editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Debug files
+*.debug
+
+# Testing files
+/coverage/
+/junit.xml
+
+# Local development files
+*.local
+
+# Cache directories
+.cache/
+.temp/
+
+# Miscellaneous
+*.bak
+*.tmp
+*.patch
