@@ -7,17 +7,40 @@ const LoginPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle login logic
-    console.log('Logging in with:', email, password);
+
+    // Make the API call to backend
+    fetch('http://localhost:3000/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message === "Login successful") {
+          alert("Login successful");
+          console.log("JWT Token:", data.token); // Optionally store token in localStorage or state
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Error logging in");
+      });
   };
 
   return (
     <Container
       fluid
       className="d-flex justify-content-center align-items-center"
-      style={{ height: '100vh' }} // Ensures the container takes up full height
+      style={{ height: '100vh' }}
     >
-      <Row className="w-100 justify-content-center"> {/* Add justify-content-center to center the Row */}
+      <Row className="w-100 justify-content-center">
         <Col xs={12} sm={8} md={6} lg={4} className="p-4 border rounded shadow-lg">
           <h2 className="text-center mb-4">Login</h2>
           <Form onSubmit={handleSubmit}>
