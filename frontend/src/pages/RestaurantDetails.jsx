@@ -1,16 +1,26 @@
-// src/pages/RestaurantDetails.js
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import {menuItems} from '../utils/menuItems'; // Adjust the path as needed
+import { menuItems } from '../utils/menuItems'; // Adjust the path as needed
 
 const RestaurantDetails = ({ addToCart }) => {
-  const { id } = useParams(); // Get the restaurant ID from the URL
-  const restaurantId = parseInt(id); // Convert it to an integer
+  const { id } = useParams();
+  const restaurantId = parseInt(id);
   const restaurantMenu = menuItems.find(menu => menu.restaurantId === restaurantId);
+
+  // State to track which item was recently added
+  const [addedItem, setAddedItem] = useState(null);
 
   if (!restaurantMenu) {
     return <div>No menu found for this restaurant.</div>;
   }
+
+  const handleAddToCart = (item) => {
+    addToCart(item);
+    setAddedItem(item.id);
+
+    // Remove the "Added" message after 1 second
+    setTimeout(() => setAddedItem(null), 1000);
+  };
 
   return (
     <div className="restaurant-details">
@@ -23,7 +33,8 @@ const RestaurantDetails = ({ addToCart }) => {
               <h3>{item.name}</h3>
               <p>{item.description}</p>
               <p>₹{item.price}</p>
-              <button onClick={() => addToCart(item)}>Add to Cart</button>
+              <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
+              {addedItem === item.id && <span className="added-msg">✔ Added!</span>}
             </div>
           </div>
         ))}

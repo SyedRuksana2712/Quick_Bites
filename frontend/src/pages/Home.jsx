@@ -1,10 +1,19 @@
-// src/pages/Home.js
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import RestaurantCard from '../components/RestaurantCard';
-import restaurants from '../utils/restaurants'; // Corrected path
+import restaurants from '../utils/restaurants';
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate(); // Initialize Navigate Hook
+
+  useEffect(() => {
+    const token = localStorage.getItem("token"); // Check if token exists
+    if (!token) {
+      alert("You must log in first!");
+      navigate('/login'); // Redirect to Login Page if not authenticated
+    }
+  }, [navigate]);
 
   const filteredRestaurants = restaurants.filter(restaurant =>
     restaurant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

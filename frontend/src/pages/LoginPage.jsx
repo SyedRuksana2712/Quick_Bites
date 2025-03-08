@@ -1,29 +1,37 @@
 import React, { useState } from 'react';
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
-const LoginPage = () => {
+const LoginPage = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Make the API call to backend
     fetch('http://localhost:3000/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
+      body: JSON.stringify({ email, password }),
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log("Server Response:", data);
+
         if (data.message === "Login successful") {
           alert("Login successful");
-          console.log("JWT Token:", data.token); // Optionally store token in localStorage or state
+
+          // Store JWT token in localStorage
+          localStorage.setItem("token", data.token);
+
+          // Update user state in App.js
+          onLogin(email);
+
+          // Redirect to Home Page
+          navigate('/');  // ✅ Make sure this matches your home route in App.js
         } else {
           alert(data.message);
         }
@@ -35,11 +43,7 @@ const LoginPage = () => {
   };
 
   return (
-    <Container
-      fluid
-      className="d-flex justify-content-center align-items-center"
-      style={{ height: '100vh' }}
-    >
+    <Container fluid className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
       <Row className="w-100 justify-content-center">
         <Col xs={12} sm={8} md={6} lg={4} className="p-4 border rounded shadow-lg">
           <h2 className="text-center mb-4">Login</h2>
@@ -64,7 +68,7 @@ const LoginPage = () => {
               />
             </Form.Group>
 
-            <Button variant="primary" type="submit" block>
+            <Button variant="primary" type="submit" className="w-100 mt-3">
               Login
             </Button>
           </Form>

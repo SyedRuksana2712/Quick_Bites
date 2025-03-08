@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-const Navbar = ({ cartCount, user }) => {
+const Navbar = ({ cartCount, user, handleLogout }) => {
   return (
     <nav className="navbar">
       <div className="container">
@@ -11,7 +11,10 @@ const Navbar = ({ cartCount, user }) => {
             Cart ({cartCount})
           </Link>
           {user ? (
-            <span>Welcome, {user}</span>
+            <div className="user-section">
+              <span className="welcome-text">Welcome, {user}</span>
+              <button className="logout-button" onClick={handleLogout}>Logout</button>
+            </div>
           ) : (
             <>
               <Link to="/login">Login</Link>

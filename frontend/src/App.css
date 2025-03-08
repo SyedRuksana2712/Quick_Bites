@@ -7,7 +7,7 @@
 
 .navbar {
   background: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 1rem 0;
   position: sticky;
   top: 0;
@@ -32,6 +32,7 @@
 
 .nav-links {
   display: flex;
+  align-items: center;
   gap: 2rem;
 }
 
@@ -46,6 +47,33 @@
   color: white !important;
   padding: 0.5rem 1rem;
   border-radius: 4px;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.welcome-text {
+  font-size: 1rem;
+  color: #333;
+}
+
+.logout-button {
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: 0.3s;
+  font-weight: bold;
+}
+
+.logout-button:hover {
+  background: #cc0000;
 }
 
 .home-page {
@@ -77,10 +105,12 @@
   border-radius: 8px;
   overflow: hidden;
   transition: transform 0.2s;
+  background: white;
 }
 
 .restaurant-card:hover {
   transform: translateY(-2px);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .restaurant-card img {
@@ -107,6 +137,7 @@
   background: #ff3f6c;
   color: white;
   text-decoration: none;
+  font-weight: bold;
 }
 
 .restaurant-details {
@@ -140,6 +171,7 @@
   padding: 1rem;
   border: 1px solid #eee;
   border-radius: 4px;
+  background: white;
 }
 
 .menu-item button {
@@ -149,6 +181,7 @@
   padding: 0.5rem 1rem;
   border-radius: 4px;
   cursor: pointer;
+  font-weight: bold;
 }
 
 .cart-page {
@@ -180,11 +213,14 @@
 
 .remove-btn {
   background: #ff0000 !important;
+  color: white;
 }
 
 .cart-total {
   text-align: right;
   margin-top: 2rem;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 
 .checkout-btn {
@@ -196,21 +232,31 @@
   border-radius: 4px;
   cursor: pointer;
   margin-top: 1rem;
+  font-weight: bold;
 }
 
 @media (max-width: 768px) {
   .restaurant-header {
     flex-direction: column;
   }
-  
+
   .restaurant-header img {
     width: 100%;
     height: auto;
   }
-  
+
   .menu-item {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+  }
+
+  .nav-links {
+    gap: 1rem;
+  }
+
+  .logout-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
   }
 }
