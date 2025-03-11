@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const SignUpPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate(); // ✅ Added navigation hook
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,11 +32,16 @@ const SignUpPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        console.log(data.message); // Success: Show message in console or navigate to login page
         alert("Signup successful!");
-        // Optionally, redirect user to login page after successful signup
+        
+        // ✅ Store JWT token in localStorage if signup returns a token
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+        }
+
+        // ✅ Redirect to Home Page after successful signup
+        navigate('/'); 
       } else {
-        // If response is not ok, handle error response
         setErrorMessage(data.message || 'An error occurred during signup');
       }
     } catch (error) {
@@ -85,7 +92,7 @@ const SignUpPage = () => {
 
             {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
 
-            <Button variant="primary" type="submit" block>
+            <Button variant="primary" type="submit" className="w-100 mt-3">
               Sign Up
             </Button>
           </Form>
