@@ -10,7 +10,7 @@ const LoginPage = ({ onLogin }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch('http://localhost:3000/login', {
+    fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ const LoginPage = ({ onLogin }) => {
           onLogin(email);
 
           // Redirect to Home Page
-          navigate('/');  // ✅ Make sure this matches your home route in App.js
+          navigate('/');  // make sure this matches your home route in App.js
         } else {
           alert(data.message);
         }
