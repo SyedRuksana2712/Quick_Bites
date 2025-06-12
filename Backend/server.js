@@ -1,116 +1,91 @@
-const mongoose = require('mongoose');
-const express = require('express');
-require('dotenv').config(); // Load environment variables from .env file
-const cors = require('cors');
-const User = require('./models/User'); // Import the User model
-const bcrypt = require("bcryptjs");
-const jwt = require('jsonwebtoken');  // Add jsonwebtoken for token generation
 
-// App config
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const bcrypt = require("bcryptjs");
+const jwt = require('jsonwebtoken');
+const User = require('./models/User'); // your User schema
+
 const app = express();
-const port = process.env.PORT || 5000 ;
+const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(express.json());  // Parse incoming JSON requests
-app.use(cors());  // Enable Cross-Origin Resource Sharing (CORS)
+app.use(express.json());
 
+// CORS config for local + Render frontend
 const corsOptions = {
-  origin: 'http://localhost:3001', // Frontend URL (adjust this if needed)
-  methods: 'GET,POST,PUT,DELETE',
-  allowedHeaders: 'Content-Type, Authorization',
+  origin: ['http://localhost:3001', 'https://your-frontend.onrender.com'],
+  credentials: true,
 };
-
 app.use(cors(corsOptions));
 
-// MongoDB connection using async/await
+// Connect to MongoDB
 async function connectDB() {
   try {
-    await mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://syedruksana:syedruksana@cluster0.f2ewl.mongodb.net/backend?retryWrites=true&w=majority");
-    console.log('Connected to MongoDB');
+    await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log(' Connected to MongoDB');
   } catch (err) {
-    console.error('MongoDB connection error:', err);
+    console.error(' MongoDB connection error:', err);
+    process.exit(1);
   }
 }
-
-// Call the connectDB function to connect to MongoDB
 connectDB();
 
-// Define a simple route
+// Health check route
 app.get("/", (req, res) => {
-  res.send("API Working");
+  res.send(" API is working!");
 });
 
-// Define the signup route
+// Signup Route
 app.post("/signup", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
-    }
+    if (existingUser) return res.status(400).json({ message: 'User already exists' });
 
-    // Hash the password before saving the user
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new user document using the User model with the hashed password
-    const user = new User({
-      email,
-      password: hashedPassword
-    });
-
-    // Save the user to the database
+    const user = new User({ email, password: hashedPassword });
     await user.save();
 
-    // Send success response after successful registration
     res.status(201).json({ message: "User Registered" });
-    console.log("User Registration completed...");
+    console.log("User Registration completed.");
   } catch (err) {
-    console.log("Error during user registration:", err);
-    res.status(500).json({ message: 'Error creating user, please try again later.' });
+    console.error(" Error during registration:", err);
+    res.status(500).json({ message: 'Error creating user' });
   }
 });
 
-// Define the login route
+// Login Route
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Check if the user exists
     const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: "Invalid Credentials" });
 
-    if (!user) {
-      return res.status(400).json({ message: "Invalid Credentials" });
-    }
-
-    // Compare password
     const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) return res.status(401).json({ message: "Invalid Credentials" });
 
-    if (!isPasswordValid) {
-      return res.status(400).json({ message: "Invalid Credentials" });
-    }
-
-    // Create a JWT token
     const token = jwt.sign(
       { userId: user._id, email: user.email },
-      process.env.JWT_SECRET || 'your_jwt_secret',  // use an environment variable for the JWT secret key
-      { expiresIn: '1h' } // Set token expiration time
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
     );
 
-    // Send success response with the token
     res.status(200).json({ message: "Login successful", token });
   } catch (err) {
-    console.log("Error during user login:", err);
-    res.status(500).json({ message: 'Error logging in, please try again later.' });
+    console.error(" Error during login:", err);
+    res.status(500).json({ message: 'Error logging in' });
   }
 });
 
 // Start the server
-const server = app.listen(port, (err) => {
-  if (err) {
-    console.error('Server error:', err);
-  } else {
-    console.log(`Server is running on http://localhost:${port}`);
-  }
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
 });
