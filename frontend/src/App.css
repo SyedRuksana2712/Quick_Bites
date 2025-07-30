@@ -21,6 +21,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .logo {
@@ -34,6 +35,7 @@
   display: flex;
   align-items: center;
   gap: 2rem;
+  flex-wrap: wrap;
 }
 
 .nav-links a {
@@ -53,6 +55,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .welcome-text {
@@ -172,6 +175,7 @@
   border: 1px solid #eee;
   border-radius: 4px;
   background: white;
+  flex-wrap: wrap;
 }
 
 .menu-item button {
@@ -196,6 +200,7 @@
   align-items: center;
   padding: 1rem;
   border-bottom: 1px solid #eee;
+  flex-wrap: wrap;
 }
 
 .quantity-controls {
@@ -235,6 +240,7 @@
   font-weight: bold;
 }
 
+/* 🔽 Mobile / Tablet Breakpoints */
 @media (max-width: 768px) {
   .restaurant-header {
     flex-direction: column;
@@ -253,10 +259,49 @@
 
   .nav-links {
     gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 1rem;
   }
 
   .logout-button {
     padding: 0.4rem 0.8rem;
     font-size: 0.85rem;
+  }
+
+  .form-container {
+    padding: 20px;
+  }
+
+  .custom-button {
+    font-size: 14px;
+  }
+
+  .restaurant-card img {
+    height: auto;
+  }
+
+  .container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .view-menu-btn {
+    width: 100%;
+  }
+
+  .checkout-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .search-bar input {
+    font-size: 0.9rem;
   }
 }
